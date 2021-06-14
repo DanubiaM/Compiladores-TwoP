@@ -1,3 +1,17 @@
+pilha = [1, 2, 3 ,4]
+print(pilha)
+
+pilha.append(5)
+pilha.append(7)
+print(pilha)
+
+pilha.pop()
+print(pilha)
+
+print(pilha[-1])
+
+
+
 
 """
         self._lexema = self._lexema[:len(self._lexema) - 1]
@@ -5,13 +19,12 @@
         self._lexema = ''
         self._cabeca -= 1
         self._q0()
-"""
-    """
+
+ 
                  self._lexema = self._lexema[:len(self._lexema) - 1]
                  self._cabeca -= 1
-                 """
-
-"""            
+             
+           
 
         if self._caracter == self._fim_de_linha:
         self._tabela_de_simbolos.append(
@@ -39,7 +52,7 @@
         self._lexema = ''
         self._cabeca -= 1
         self._q0()
-"""
+
 
 # This is a sample Python script.
 
@@ -149,4 +162,4 @@ class Analisador_Lexico:
         else:
             print ("erro lexico")
 
-
+"""

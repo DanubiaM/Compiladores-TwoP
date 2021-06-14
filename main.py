@@ -1,7 +1,6 @@
 from lexico import Analisador_Lexico
-
-analisador_lexico = Analisador_Lexico("C:\\Users\\danub\\OneDrive\\Área de Trabalho\\IFMT\\6 semestre\\Compiladores\\Lexema\\arquivo_fonte.txt")
-
+from sintatico import Analisador_Sintatico
+analisador_lexico = Analisador_Lexico("C:\\Users\\danub\\OneDrive\\Área de Trabalho\\git\\Compiladores-TwoP\\arquivo_fonte.txt")
 
 analisador_lexico.obter_tabela_tokens()
 list_tokens = analisador_lexico._tabela_de_simbolos
@@ -16,6 +15,14 @@ for v in (list_tokens):
 
 print("*"*50)
 
+###############Sintático###########
+print()
+print()
+analisador_sintatico = Analisador_Sintatico(list_tokens)
+
+analisador_sintatico.verificacao_sintatica()
+print()
+analisador_sintatico.leitura_tokens()
 
 
 
