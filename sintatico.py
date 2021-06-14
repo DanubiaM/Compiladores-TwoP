@@ -50,13 +50,14 @@ class Analisador_Sintatico:
             elif len(self.list_tokens) > 0 and self.pilha_sintatica == None:
                 print("Erro Sintático: Lista de tokens com itens.") #especificar linha, coluna.
             """
-
+        print("Finalizou")
+    
     #Método para verificar regras de produção
     def tabela_sintatica(self):
 
 
         if self.pilha_sintatica[-1] == 'PROGRAMA':
-            #Produção valida 0
+            #PRODUCAO  0
             self.pilha_sintatica.pop()
             #adiciona as produções
             self.pilha_sintatica.append('tk_end_program')
@@ -76,5 +77,174 @@ class Analisador_Sintatico:
             elif self.list_tokens[0][0] == 'tk_else' or self.list_tokens[0][0] == ":":
                 self.pilha_sintatica.pop()
             
+            else:
+                print("Erro Sintático: não foi possivel reconhecer producao válida  para a linha {0} e coluna {1}".format(self.list_tokens[0][1], self.list_tokens[0][2]))
+
+        elif self.pilha_sintatica[-1] == 'COMANDO':
+            #PRODUCAO 3
+            if self.list_tokens[0][0] == 'tk_read':
+                self.pilha_sintatica.pop()
+                self.pilha_sintatica.append(')')
+                self.pilha_sintatica.append('id')
+                self.pilha_sintatica.append('(')
+                self.pilha_sintatica.append('tk_read')
+            
+            #PRODUCAO 4
+            elif self.list_tokens[0][0] == 'tk_screen':
+                self.pilha_sintatica.pop()
+                self.pilha_sintatica.append(')')
+                self.pilha_sintatica.append('PUTS')
+                self.pilha_sintatica.append('(')
+                self.pilha_sintatica.append('tk_screen')
+
+            #PRODUCAO 5
+            elif self.list_tokens[0][0] == 'tk_int':
+                self.pilha_sintatica.pop()
+                self.pilha_sintatica.append('DECLARACAO_VAR')
+
+            #PRODUCAO 6
+            elif self.list_tokens[0][0] == 'id':
+                self.pilha_sintatica.pop()
+                self.pilha_sintatica.append('EXPRESSAO')
+                self.pilha_sintatica.append('tk_atribuicao')
+                self.pilha_sintatica.append('id')
+
+            #PRODUCAO 7
+            elif self.list_tokens[0][0] == 'tk_if':
+                self.pilha_sintatica.pop()
+                self.pilha_sintatica.append('tk_end_if')
+                self.pilha_sintatica.append('CONDICIONAL')
+            
+            #PRODUCAO 8
+            elif self.list_tokens[0][0] == 'tk_while':
+                self.pilha_sintatica.pop()
+                self.pilha_sintatica.append('tk_end_while')
+                self.pilha_sintatica.append(':')
+                self.pilha_sintatica.append('REPETICAO')
+            else:
+                print("Erro Sintático: não foi possivel reconhecer producao válida  para a linha {0} e coluna {1}".format(self.list_tokens[0][1], self.list_tokens[0][2]))
+
+
+        elif self.pilha_sintatica[-1] == 'DECLARACAO_VAR':
+            #PRODUCAO 9
+            if self.list_tokens[0][0] == 'tk_int':
+                self.pilha_sintatica.pop()
+                self.pilha_sintatica.append('id')
+                self.pilha_sintatica.append('tk_int')
+            else:
+                print("Erro Sintático: não foi possivel reconhecer producao válida  para a linha {0} e coluna {1}".format(self.list_tokens[0][1], self.list_tokens[0][2]))
+
+
+        elif self.pilha_sintatica[-1] == 'CONDICIONAL':
+            #PRODUCAO 10
+            if self.list_tokens[0][0] == 'tk_if':
+                self.pilha_sintatica.pop()
+                self.pilha_sintatica.append('ELSE_CONDICAO')
+                self.pilha_sintatica.append('LISTA_COMANDOS')                
+                self.pilha_sintatica.append(':')
+                self.pilha_sintatica.append('EXPRESSAO')
+                self.pilha_sintatica.append('tk_if')
+            else:
+                print("Erro Sintático: não foi possivel reconhecer producao válida  para a linha {0} e coluna {1}".format(self.list_tokens[0][1], self.list_tokens[0][2]))
+    
+        elif self.pilha_sintatica [-1] == 'ELSE_CONDICAO':
+            #PRODUCAO 11
+            if self.leitura_tokens[0][0] == 'tk_else':
+                self.pilha_sintatica.pop()
+                self.pilha_sintatica.append('LISTA_COMANDOS')
+                self.pilha_sintatica.append(':')                
+                self.pilha_sintatica.append('tk_else')
+                self.pilha_sintatica.append('EXPRESSAO')
+
+            #PRODUCAO 12   
+            elif self.leitura_tokens[0][0] == ':':
+                 self.pilha_sintatica.pop()
+            else:
+                print("Erro Sintático: não foi possivel reconhecer producao válida  para a linha {0} e coluna {1}".format(self.list_tokens[0][1], self.list_tokens[0][2]))
+    
+        elif self.pilha_sintatica[-1] == 'REPETICAO':
+            #PRODUCAO 13
+            if self.leitura_tokens[0][0] == 'tk_while':
+                self.pilha_sintatica.pop()
+                self.pilha_sintatica.append('LISTA_COMANDOS')
+                self.pilha_sintatica.append(':')                
+                self.pilha_sintatica.append('EXPRESSAO')
+                self.pilha_sintatica.append('tk_while')
+            else:
+                print("Erro Sintático: não foi possivel reconhecer producao válida  para a linha {0} e coluna {1}".format(self.list_tokens[0][1], self.list_tokens[0][2]))
+    
+        elif self.pilha_sintatica[-1] == 'EXPRESSAO':
+            #PRODUCAO 14
+            if self.leitura_tokens[0][0] == 'num' or self.leitura_tokens[0][0] == 'id':
+                self.pilha_sintatica.pop()
+                self.pilha_sintatica.append('TAIL')
+                self.pilha_sintatica.append('OPERANDO')
+
+            #PRODUCAO 15
+            if self.leitura_tokens[0][0] == '(':
+                self.pilha_sintatica.pop()
+                self.pilha_sintatica.append('TAIL')
+                self.pilha_sintatica.append(')')  
+                self.pilha_sintatica.append('EXPRESSAO')
+                self.pilha_sintatica.append('(')                  
+            else:
+                print("Erro Sintático: não foi possivel reconhecer producao válida  para a linha {0} e coluna {1}".format(self.list_tokens[0][1], self.list_tokens[0][2]))
+    
+        elif self.pilha_sintatica[-1] == 'OPERANDO':
+            #PRODUCAO 21
+            if self.leitura_tokens[0][0] == 'id':
+                self.pilha_sintatica.pop()
+                self.pilha_sintatica.append('id')
+
+            #PRODUCAO 22
+            elif self.leitura_tokens[0][0] == 'num':
+                self.pilha_sintatica.pop()
+                self.pilha_sintatica.append('num')
+            else:
+                print("Erro Sintático: não foi possivel reconhecer producao válida  para a linha {0} e coluna {1}".format(self.list_tokens[0][1], self.list_tokens[0][2]))
+    
+        elif self.pilha_sintatica[-1] == 'TAIL':
+            #PRODUCAO 16
+            if self.leitura_tokens[0][0] == 'op_mat' or self.leitura_tokens[0][0] == 'c_logico' or self.leitura_tokens[0][0] == 'op_logico':
+                self.pilha_sintatica.pop()
+                self.pilha_sintatica.append('OPERACAO')
+
+            #PRODUCAO 17
+            elif self.leitura_tokens[0][0] == ';' or self.leitura_tokens[0][0] == ')' or self.leitura_tokens[0][0] == ':':
+                self.pilha_sintatica.pop()
+            else:
+                print("Erro Sintático: não foi possivel reconhecer producao válida  para a linha {0} e coluna {1}".format(self.list_tokens[0][1], self.list_tokens[0][2]))
+      
+        elif  self.pilha_sintatica[-1] == 'OPERACAO':
+            #PRODUCAO 18
+            if self.leitura_tokens[0][0] == 'c_logico':
+                self.pilha_sintatica.pop()
+                self.pilha_sintatica.append('EXPRESSAO')
+                self.pilha_sintatica.append('c_logico')
+            
+            #PRODUCAO 19
+            elif self.leitura_tokens[0][0] == 'op_logico':
+                self.pilha_sintatica.pop()
+                self.pilha_sintatica.append('EXPRESSAO')
+                self.pilha_sintatica.append('op_logico')
+
+            #PRODUCAO 20
+            elif self.leitura_tokens[0][0] == 'op_mat':
+                self.pilha_sintatica.pop()
+                self.pilha_sintatica.append('EXPRESSAO')
+                self.pilha_sintatica.append('op_mat')
+            else:
+                print("Erro Sintático: não foi possivel reconhecer producao válida  para a linha {0} e coluna {1}".format(self.list_tokens[0][1], self.list_tokens[0][2]))
+        
+        elif self.pilha_sintatica[-1] == 'PUTS':
+            #PRODUCAO 23
+            if self.leitura_tokens[0][0] == 'string':
+                self.pilha_sintatica.pop()
+                self.pilha_sintatica.append('string')
+            
+            #PRODUCAO 24
+            elif self.leitura_tokens[0][0] == 'id':
+                self.pilha_sintatica.pop()
+                self.pilha_sintatica.append('id')
             else:
                 print("Erro Sintático: não foi possivel reconhecer producao válida  para a linha {0} e coluna {1}".format(self.list_tokens[0][1], self.list_tokens[0][2]))
