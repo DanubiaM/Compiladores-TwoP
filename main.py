@@ -20,6 +20,7 @@ print()
 print()
 analisador_sintatico = Analisador_Sintatico(list_tokens)
 
+
 analisador_sintatico.verificacao_sintatica()
 print()
 analisador_sintatico.leitura_tokens()

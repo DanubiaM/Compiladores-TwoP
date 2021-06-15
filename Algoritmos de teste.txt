@@ -35,10 +35,15 @@ start:
 TESTE 3:
 
 start:
-    int 1n1 = 6;
-    int n2 = 8;
-    int n3 = 4;
-    int n4 = 7;
+	int n1;
+	int n2;
+	int n3;
+	int n4;
+
+    n1 = 6;
+    n2 = 8;
+    n3 = 4;
+    n4 = 7;
 
     media = (n1+n2+n3+n4)/4;
 
