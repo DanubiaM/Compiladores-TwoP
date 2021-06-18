@@ -1,4 +1,7 @@
 
+from ExceptionSintatic import ExceptionSintatic
+import sys
+
 class Analisador_Sintatico:
 
     #construtor
@@ -10,7 +13,7 @@ class Analisador_Sintatico:
         self.list_tokens = list(lista_tokens)
         self.list_tokens.append('$')
 
-     #metodo auxiliar   
+    #metodo auxiliar   
     def leitura_tokens(self):
         print("Lista tokens")
         for i in self.list_tokens:
@@ -33,8 +36,8 @@ class Analisador_Sintatico:
             if self.list_tokens[0][0] == self.pilha_sintatica[-1]:
 
                 #Caso seja iguais, porem $ não devera realizar remoção de $
-                if self.list_tokens[0][0] == '$' and self.pilha_sintatica[-1] == '$':
-                    return
+                #if self.list_tokens[0][0] == '$' and self.pilha_sintatica[-1] == '$':
+                 #   sys.exit()
 
                 del self.list_tokens[0]  #remove o primeiro item
                 self.pilha_sintatica.pop()
@@ -48,7 +51,9 @@ class Analisador_Sintatico:
              
             #condição invalida, não pode haver lista vazia  e pilha com dados
             if len(self.list_tokens) == 0 and len(self.pilha_sintatica)>0:
-                print("Erro Sintático: Pilha com itens.") #especificar linha, coluna.
+                #print("Erro Sintático: Pilha com itens.") #especificar linha, coluna.
+                raise ExceptionSintatic(self.list_tokens[0][2], self.list_tokens[0][3])
+
                 return
             elif len(self.list_tokens) > 0 and (self.pilha_sintatica) == 0:
                 print("Erro Sintático: Lista de tokens com itens.") #especificar linha, coluna.
@@ -153,7 +158,6 @@ class Analisador_Sintatico:
                 self.pilha_sintatica.append('tk_if')
             else:
                 print("Erro Sintático: não foi possivel reconhecer producao válida  para a linha {0} e coluna {1}".format(self.list_tokens[0][2], self.list_tokens[0][3]))
-    
         elif self.pilha_sintatica [-1] == 'ELSE_CONDICAO':
             #PRODUCAO 11
             if self.list_tokens[0][0] == 'tk_else':
@@ -259,5 +263,6 @@ class Analisador_Sintatico:
                 print("Erro Sintático: não foi possivel reconhecer producao válida  para a linha {0} e coluna {1}".format(self.list_tokens[0][2], self.list_tokens[0][3]))
         else:
             print("Erro Sintático: não foi possivel reconhecer o valor  " + self.pilha_sintatica[-1])
+
             return 
 

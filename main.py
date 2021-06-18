@@ -1,5 +1,6 @@
 from lexico import Analisador_Lexico
 from sintatico import Analisador_Sintatico
+from sintatico2 import Analisador_Sintatico2
 analisador_lexico = Analisador_Lexico("C:\\Users\\danub\\OneDrive\\Área de Trabalho\\git\\Compiladores-TwoP\\arquivo_fonte.txt")
 
 analisador_lexico.obter_tabela_tokens()
@@ -18,12 +19,13 @@ print("*"*50)
 ###############Sintático###########
 print()
 print()
-analisador_sintatico = Analisador_Sintatico(list_tokens)
-
-
+#analisador_sintatico = Analisador_Sintatico(list_tokens)
+analisador_sintatico = Analisador_Sintatico2(list_tokens)
+#analisador_sintatico.valor_producao()
 analisador_sintatico.verificacao_sintatica()
+analisador_sintatico.log_operacoes()
 print()
-analisador_sintatico.leitura_tokens()
+#analisador_sintatico.leitura_tokens()
 
 
 
