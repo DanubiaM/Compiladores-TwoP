@@ -121,8 +121,26 @@ print("u:",u)
             for j in y:
                 print(j)
                 if i == j:
+
+            #print("First List: ",self.list_tokens[0][0]) 
+            #print("Topo Pilha : ",self.pilha_sintatica[-1])
+            #self.leitura_tokens()
+             #print("...Desempilhou... ")  
+print("X",x)
+        print("Y", y)
+              #try:
+        producao = list(set(x).intersection(y)) # Não deve haver possibilidade de producao ser uma lista
+                                                    # pois x e y devem ter apenas 1 valo em comum.
+        #except:
+            #Caso intersectio não encontre um valor em comum, o tokem não possui uma producao para aquele nao terminal.
+            #print("Erro sintático: não possível encontrar uma producao válida para o valor {0} na linha {1} e coluna {2}. [error performing parsing]".format(self.list_tokens[0][1], self.list_tokens[0][2], self.list_tokens[0][3]))
+            #sys.exit()
+        #print(producao[0])
     """
-import math
+
+arquivo = open("arquivo_fonte.fon","r")
+
+print(arquivo.readlines())
 #l1 = -1
 #l2 = 0
 #try:    
@@ -131,10 +149,8 @@ import math
 #    print(list(set(l2).intersection(l1)))
 #except :
 #    raise ExceptionSintatic(l1,l2)
-#try:
-result = math.sqrt(-1)
-#except Exception:
-raise 'anao pode ser valor engativo'
+
+
 """pilha = [1, 2, 3 ,4]
 print(pilha)
 

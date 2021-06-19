@@ -1,32 +1,64 @@
+import argparse
+
 from lexico import Analisador_Lexico
 from sintatico import Analisador_Sintatico
-from sintatico2 import Analisador_Sintatico2
-analisador_lexico = Analisador_Lexico("C:\\Users\\danub\\OneDrive\\Área de Trabalho\\git\\Compiladores-TwoP\\arquivo_fonte.txt")
 
-analisador_lexico.obter_tabela_tokens()
-list_tokens = analisador_lexico._tabela_de_simbolos
+#analisador_lexico = Analisador_Lexico("C:\\Users\\danub\\OneDrive\\Área de Trabalho\\git\\Compiladores-TwoP\\arquivo_fonte.fon")
 
-print("*"*50)
-print("\t\t\t ANALISADOR LÉXICO \t\t\t")
-print("*"*50)
-print("[Token, Lexema, Linha, Coluna]")
+#Método responsavel por retornar a lista de tokens.
+def list_tokens(arquivo):
+  analisador_lexico = Analisador_Lexico(arquivo)
+  analisador_lexico.obter_tabela_tokens()       
+  return analisador_lexico._tabela_de_simbolos
 
-for v in (list_tokens):
-  print(v)
+#Método do analisador sintático
+def _parser(args):
+  lista_tokens = list_tokens(args)
+  analisador_sintatico = Analisador_Sintatico(lista_tokens)
+  analisador_sintatico.verificacao_sintatica()
+  analisador_sintatico.log_operacoes()
 
-print("*"*50)
+#Método do analisador léxico
+def lexical_analyzer(args):
+  lista_tokens = list_tokens(args)   
+  print_table_tokens(lista_tokens)
 
-###############Sintático###########
-print()
-print()
-#analisador_sintatico = Analisador_Sintatico(list_tokens)
-analisador_sintatico = Analisador_Sintatico2(list_tokens)
-#analisador_sintatico.valor_producao()
-analisador_sintatico.verificacao_sintatica()
-analisador_sintatico.log_operacoes()
-print()
-#analisador_sintatico.leitura_tokens()
+#Impressao da tabela de tokens
+def print_table_tokens(list_tokens):
+  print("*"*50)
+  print("\t\t\t ANALISADOR LÉXICO \t\t\t")
+  print("*"*50)
+  print("[Token, Lexema, Linha, Coluna]")
+  for v in (list_tokens):
+    print(v)
+  print("*"*50)
 
+def all(args):
+  lista_tokens = list_tokens(args)   
+  print_table_tokens(lista_tokens)
+  analisador_sintatico = Analisador_Sintatico(lista_tokens)
+  analisador_sintatico.verificacao_sintatica()
+  analisador_sintatico.log_operacoes()
 
+if __name__ == '__main__':
+  #criando um objeto parser
+  parser = argparse.ArgumentParser(description = "Compilador da Linguagem TwoP!")
 
+  #definindo arumentos para o objeto parser
+  #parser.add_argument('option', help="Choise a option: -tudo")
+  #parser.add_argument('-tudo','--tudo', action ="store_true", help="exibe todas as listagens do compilador")
+  #parser.add_argument('-lt','--listtokens',action ="store_true", help="exibe a listagem dos Tokens")
+  #parser.add_argument('-ls','--listsintatic',action ="store_true", help="exibe o LOG do analisador sintático")
+  #parser.add_argument('arquivo_fonte.fon', action ="store_true", nargs='1', help="arquivo fonte do codigo")
 
+  parser.add_argument('-tudo', metavar="tudo", help="exibe todas as listagens do compilador")
+  parser.add_argument('-lt', metavar="listtokens", help="exibe a listagem dos Tokens")
+  parser.add_argument('-ls', metavar="parser", help="exibe o LOG do analisador sintático")
+
+  args = parser.parse_args()  
+  if args.tudo:
+    all(args.tudo)    
+  elif args.lt:
+    lexical_analyzer(args.lt)
+  elif args.ls:
+    _parser(args.ls)

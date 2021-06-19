@@ -14,7 +14,8 @@ class Analisador_Lexico:
         self.caracter_especiais = ['(', ')', '=', ';', '+', '-', '/', '*', '>', '<', '&', '|', ':', '\"']
         self._arquivo_fonte = arquivo_fonte
 
-        if not os.path.exists(self._arquivo_fonte):
+        
+        if not os.path.isfile(self._arquivo_fonte):
             print("Erro Geral:", FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), self._arquivo_fonte))
 
         else:

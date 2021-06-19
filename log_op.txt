@@ -1,0 +1,53 @@
+DESEMPILHANDO:...... Topo Pilha: PROGRAMA ->  producao a ser inserida 0. 
+EMPILHANDO:......... Topo Pilha: tk_end_program -> producao aplicada 0. 
+EMPILHANDO:......... Topo Pilha: : -> producao aplicada 0. 
+EMPILHANDO:......... Topo Pilha: LISTA_COMANDOS -> producao aplicada 0. 
+EMPILHANDO:......... Topo Pilha: : -> producao aplicada 0. 
+EMPILHANDO:......... Topo Pilha: tk_start_program -> producao aplicada 0. 
+REDUCAO APLICADA:.... Topo Pilha: tk_start_program First List: tk_start_program
+REDUCAO APLICADA:.... Topo Pilha: : First List: :
+DESEMPILHANDO:...... Topo Pilha: LISTA_COMANDOS ->  producao a ser inserida 1. 
+EMPILHANDO:......... Topo Pilha: LISTA_COMANDOS -> producao aplicada 1. 
+EMPILHANDO:......... Topo Pilha: ; -> producao aplicada 1. 
+EMPILHANDO:......... Topo Pilha: COMANDO -> producao aplicada 1. 
+DESEMPILHANDO:...... Topo Pilha: COMANDO ->  producao a ser inserida 5. 
+EMPILHANDO:......... Topo Pilha: DECLARACAO_VAR -> producao aplicada 5. 
+DESEMPILHANDO:...... Topo Pilha: DECLARACAO_VAR ->  producao a ser inserida 9. 
+EMPILHANDO:......... Topo Pilha: id -> producao aplicada 9. 
+EMPILHANDO:......... Topo Pilha: tk_int -> producao aplicada 9. 
+REDUCAO APLICADA:.... Topo Pilha: tk_int First List: tk_int
+REDUCAO APLICADA:.... Topo Pilha: id First List: id
+REDUCAO APLICADA:.... Topo Pilha: ; First List: ;
+DESEMPILHANDO:...... Topo Pilha: LISTA_COMANDOS ->  producao a ser inserida 1. 
+EMPILHANDO:......... Topo Pilha: LISTA_COMANDOS -> producao aplicada 1. 
+EMPILHANDO:......... Topo Pilha: ; -> producao aplicada 1. 
+EMPILHANDO:......... Topo Pilha: COMANDO -> producao aplicada 1. 
+DESEMPILHANDO:...... Topo Pilha: COMANDO ->  producao a ser inserida 3. 
+EMPILHANDO:......... Topo Pilha: ) -> producao aplicada 3. 
+EMPILHANDO:......... Topo Pilha: id -> producao aplicada 3. 
+EMPILHANDO:......... Topo Pilha: ( -> producao aplicada 3. 
+EMPILHANDO:......... Topo Pilha: tk_read -> producao aplicada 3. 
+REDUCAO APLICADA:.... Topo Pilha: tk_read First List: tk_read
+REDUCAO APLICADA:.... Topo Pilha: ( First List: (
+REDUCAO APLICADA:.... Topo Pilha: id First List: id
+REDUCAO APLICADA:.... Topo Pilha: ) First List: )
+REDUCAO APLICADA:.... Topo Pilha: ; First List: ;
+DESEMPILHANDO:...... Topo Pilha: LISTA_COMANDOS ->  producao a ser inserida 1. 
+EMPILHANDO:......... Topo Pilha: LISTA_COMANDOS -> producao aplicada 1. 
+EMPILHANDO:......... Topo Pilha: ; -> producao aplicada 1. 
+EMPILHANDO:......... Topo Pilha: COMANDO -> producao aplicada 1. 
+DESEMPILHANDO:...... Topo Pilha: COMANDO ->  producao a ser inserida 4. 
+EMPILHANDO:......... Topo Pilha: ) -> producao aplicada 4. 
+EMPILHANDO:......... Topo Pilha: PUTS -> producao aplicada 4. 
+EMPILHANDO:......... Topo Pilha: ( -> producao aplicada 4. 
+EMPILHANDO:......... Topo Pilha: tk_screen -> producao aplicada 4. 
+REDUCAO APLICADA:.... Topo Pilha: tk_screen First List: tk_screen
+REDUCAO APLICADA:.... Topo Pilha: ( First List: (
+DESEMPILHANDO:...... Topo Pilha: PUTS ->  producao a ser inserida 24. 
+EMPILHANDO:......... Topo Pilha: id -> producao aplicada 24. 
+REDUCAO APLICADA:.... Topo Pilha: id First List: id
+REDUCAO APLICADA:.... Topo Pilha: ) First List: )
+REDUCAO APLICADA:.... Topo Pilha: ; First List: ;
+DESEMPILHANDO:...... Topo Pilha: LISTA_COMANDOS ->  producao a ser inserida 2. 
+REDUCAO APLICADA:.... Topo Pilha: : First List: :
+REDUCAO APLICADA:.... Topo Pilha: tk_end_program First List: tk_end_program
