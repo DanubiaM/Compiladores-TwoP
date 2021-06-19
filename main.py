@@ -41,16 +41,9 @@ def all(args):
   analisador_sintatico.log_operacoes()
 
 if __name__ == '__main__':
+
   #criando um objeto parser
-  parser = argparse.ArgumentParser(description = "Compilador da Linguagem TwoP!")
-
-  #definindo arumentos para o objeto parser
-  #parser.add_argument('option', help="Choise a option: -tudo")
-  #parser.add_argument('-tudo','--tudo', action ="store_true", help="exibe todas as listagens do compilador")
-  #parser.add_argument('-lt','--listtokens',action ="store_true", help="exibe a listagem dos Tokens")
-  #parser.add_argument('-ls','--listsintatic',action ="store_true", help="exibe o LOG do analisador sintático")
-  #parser.add_argument('arquivo_fonte.fon', action ="store_true", nargs='1', help="arquivo fonte do codigo")
-
+  parser = argparse.ArgumentParser(description = "Compilador da Linguagem TwoP!")  
   parser.add_argument('-tudo', metavar="tudo", help="exibe todas as listagens do compilador")
   parser.add_argument('-lt', metavar="listtokens", help="exibe a listagem dos Tokens")
   parser.add_argument('-ls', metavar="parser", help="exibe o LOG do analisador sintático")

@@ -1,6 +1,4 @@
-from ExceptionSintatic import ExceptionSintatic
 import sys
-
 
 class Analisador_Sintatico:
 
@@ -20,6 +18,7 @@ class Analisador_Sintatico:
         self.n_producoes_aplicadas= 0
 
         self.arquivo = open("log_op.txt",'w')
+        
         self.producoes = {
             0 :["tk_start_program",":", "LISTA_COMANDOS", ":", "tk_end_program"],
             1 :["COMANDO",";", "LISTA_COMANDOS"],
@@ -88,19 +87,7 @@ class Analisador_Sintatico:
         }
 
 
-    #metodo auxiliar   
-    def leitura_tokens(self):
-        print("Lista tokens")
-        for i in self.list_tokens:
-            print(i)
-        print("-"*10)    
-        print("Pilha Sintatica")
-        for i in self.pilha_sintatica:
-            print(i)
-
-
-    def verificacao_sintatica(self):
-        
+    def verificacao_sintatica(self):      
         
         while ( self.list_tokens[0][0] != '$' and self.pilha_sintatica[-1] != '$' ):
            
@@ -121,6 +108,7 @@ class Analisador_Sintatico:
                         
         print("SUCESS: syntatic analysis completed.")
         self.arquivo.close()
+
     #Método para verificar regras de produção
     def tabela_sintatica(self):
         try:
@@ -131,6 +119,7 @@ class Analisador_Sintatico:
         else:
             self.aplica_producao(producao)
 
+    #Metodo reponsavel por verificar se existe producao válida
     def verifica_producao (self):
         producao = []  
 
@@ -139,30 +128,28 @@ class Analisador_Sintatico:
         return producao[0]
       
    
-
-    def valor_producao(self):
-        
-        x  = [-1] #Erro, devo especificar em outro metodo, casa seja -1 sera erro.
-        y = [-1]  #Foi necessario colocar o else devido x ser declado apenas dentro do if
+    #Método responsabel por retornar a chave dos dicionarios.
+    def valor_producao(self):        
+        key_stack  = [-1] 
+        key_list = [-1]  
 
         #Procurando a chave correspondente da Pilha       
         for i in self.nao_terminais.keys():            
             if i == self.pilha_sintatica[-1]:                
-                x = self.nao_terminais[i]               
+                key_stack = self.nao_terminais[i]               
       
         #Procurando a chave correspondente da Lista.       
         for j in self.terminais.keys():            
             if j == self.list_tokens[0][0]:
-                y = self.terminais[j]
+                key_list = self.terminais[j]
                 
-        return (x,y)       
+        return (key_stack,key_list)       
                     
-    
+    #Método responsavel por aplicar a producao
     def aplica_producao(self, producao):
         try:
             valor_producao = self.producoes[producao]
-            self.producoes_aplicadas.append(producao)
-            #print("Valor Producao: ", producao)
+            self.producoes_aplicadas.append(producao)            
            
             self.reg_operacoes(1, producao)
             self.pilha_sintatica.pop()  
@@ -180,7 +167,7 @@ class Analisador_Sintatico:
             print("Erro Sintático: valor foi possivel encontrar uma producao valida para o valor  {0} na linha {1} e coluna {2}. [error performing parsing]".format(self.list_tokens[0][1], self.list_tokens[0][2], self.list_tokens[0][3]))            
          
     def reg_operacoes(self,n, producao):
-        #arquivo = open("log_op.txt",'w')
+      
         #operacoes de desempilhamento
         if n == 1:
             self.arquivo.write("DESEMPILHANDO:...... Topo Pilha: {0} ->  producao a ser inserida {1}. \n".format(self.pilha_sintatica[-1], producao))
@@ -191,8 +178,7 @@ class Analisador_Sintatico:
         elif n ==3:  
             self.arquivo.write("REDUCAO APLICADA:.... Topo Pilha: {0} First List: {1}\n".format(self.pilha_sintatica[-1],self.list_tokens[0][0] ))
       
-        #arquivo.close()
-
+        
     def log_operacoes (self):
         print("-=-"*20)
         print("\t\t\tLOG DE OPERACOES")

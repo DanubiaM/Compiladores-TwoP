@@ -1,6 +1,20 @@
 start:
-	int v1;
-	read(v1);
-	screen(somando);
+	int n1 = 0;
+	int n1;
+	int n2;
+	int n3;
+	int n4;
+	
+    n1 = 6;
+    n2 = 8;
+    n3 = 4;
+    n4 = 7;
 
+    media = (n1+n2+n3+n4)/4;
+
+    if media > 7:
+        screen("Aprovado");
+    else:
+        screen("Reprovado") ;
+    :endif;
 :end
