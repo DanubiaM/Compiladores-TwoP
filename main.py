@@ -29,7 +29,7 @@ def semantic_analyzer(args):
   lista_tokens = list_tokens(args)
   analisador_semantico = Analisador_Semantico(lista_tokens)
   analisador_semantico.inicia_analise()
-
+  analisador_semantico.log_operacoes()
 #Impressao da tabela de tokens
 def print_table_tokens(list_tokens):
   print("*"*50)

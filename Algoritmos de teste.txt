@@ -44,7 +44,7 @@ start:
     n2 = 8;
     n3 = 4;
     n4 = 7;
-
+	int media;
     media = (n1+n2+n3+n4)/4;
 
     if media > 7:

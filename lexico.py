@@ -16,7 +16,7 @@ class Analisador_Lexico:
 
         
         if not os.path.isfile(self._arquivo_fonte):
-            print("Erro Geral:", FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), self._arquivo_fonte))
+            print("Erro Léxico: não foi possivel encontrar arquivo fonte", FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), self._arquivo_fonte))
 
         else:
             self._arquivo = open(self._arquivo_fonte, "r")
@@ -767,10 +767,11 @@ class Analisador_Lexico:
         elif self._caracter in self.caracter_especiais:
             self.adc_token_especial("num")
 
-        else:
-            print(
-                "Erro Léxcio: não foi possivel encontrar um token valído na linha {0} coluna {1}. Caracter {2} invalido ou nao esperado.".format(
-                    self._numero_de_linha, self._cabeca - len(self._lexema), self._caracter))
+        else:#Problema: Caso apos o numero vier uma letra, deve tratar essa situação. Ex int 1n1;
+            print("Erro Léxcio: não foi possivel encontrar um token valído na linha {0} coluna {1}. Caracter {2} invalido ou nao esperado.".format(self._numero_de_linha, self._cabeca - len(self._lexema), self._caracter))
+            self._lexema = ""
+            self.volta_um_caracter()            
+            self._q0()
 
     # Estado final: reconhece )
     def _q35(self):
@@ -920,10 +921,13 @@ class Analisador_Lexico:
         elif self._caracter == "\"":
             self._q43()
 
-        else:
-            print(
-                "Erro Léxico: não foi possivel encontrar um token valído na linha {0} coluna {1}. Caracter {2} invalido ou nao esperado.".format(
-                    self._numero_de_linha, self._cabeca - len(self._lexema), self._caracter))
+        else: #Situacao screen("Teste); <- erro, entretando é necessário tratar o erro.
+            
+            print("Erro Léxico: não foi possivel encontrar um token valído na linha {0} coluna {1}. Caracter {2} invalido ou nao esperado.".format(self._numero_de_linha, self._cabeca - len(self._lexema), self._caracter))
+            self._lexema = ""
+            self.volta_um_caracter()            
+            self._q0()
+
 
     # Estado Final: Reconhecimento do token string.
     def _q43(self):

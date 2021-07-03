@@ -1,5 +1,4 @@
 start:
-	int n1 = 0;
 	int n1;
 	int n2;
 	int n3;
@@ -10,8 +9,9 @@ start:
     n3 = 4;
     n4 = 7;
 
+	int media;
     media = (n1+n2+n3+n4)/4;
-
+	screen(media);
     if media > 7:
         screen("Aprovado");
     else:

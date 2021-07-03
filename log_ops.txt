@@ -1,0 +1,10 @@
+Variavel ´n1´ declarada
+Variavel ´n2´ declarada
+Variavel ´n3´ declarada
+Variavel ´n4´ declarada
+Variavel ´n1´ atualizada o valor para ´6´
+Variavel ´n2´ atualizada o valor para ´8´
+Variavel ´n3´ atualizada o valor para ´4´
+Variavel ´n4´ atualizada o valor para ´7´
+Variavel ´media´ declarada
+Variavel ´media´ atualizada o valor para ´(n1+n2+n3+n4)/4´

@@ -1,3 +1,4 @@
+"""
 from ExceptionSintatic import ExceptionSintatic
 from dicionario import Dicionarios
 dic = {
@@ -65,7 +66,7 @@ dic3 = {
     ':':[2, 12, 17]
 
 }
-"""
+
 xm = 'id'
 xl = 'COMANDO'
 pilha = ['$', "PROGRAMA"] 
@@ -137,15 +138,57 @@ print("X",x)
             #sys.exit()
         #print(producao[0])
     """
+""" 
+#arquivo = open("arquivo_fonte.fon","r")
 
-arquivo = open("arquivo_fonte.fon","r")
-
-print(arquivo.readlines())
+#print(arquivo.readlines())
 #l1 = -1
 #l2 = 0
 #try:    
 #    #l1 = [7]
-    #l2 = [0,4,7,8]
+from lexico import Analisador_Lexico
+from sintatico import Analisador_Sintatico
+analisador_lexico = Analisador_Lexico("C:\\Users\\danub\\OneDrive\\Área de Trabalho\\git\\Compiladores-TwoP\\arquivo_fonte.fon")
+analisador_lexico.obter_tabela_tokens()  
+lista_tokens = analisador_lexico._tabela_de_simbolos
+class Teste:
+    
+    def __init__ (self, lista_tokens):
+        self.dic = {}  
+        self.lista_tokens =  lista_tokens
+        self.le()
+
+    def le(self):    
+        for list_t in self.lista_tokens:
+            if (list_t[0] == 'id'):
+                self.dic[list_t[1]] = [list_t[0],'4','5']
+                self.teste(list_t)
+        print(self.dic)        
+    #print(list_t[1])
+    def teste(self, list_t):
+        list_atual =  self.dic[list_t[1]]
+        list_atual[1] =  list_atual[1] +1
+        self.dic.update(list_t[1]== list_atual)
+        print(self.dic) 
+   """
+dic = {'BRA':["Brazil", "BRAZUCA", 4],
+        "EUA":"Estados unidos"}
+
+lista = dic['BRA']
+lista[2] = lista[2] +1
+dic['BRA'] = lista
+lista2 = ['BR', 'EUA']
+if dic.get(lista2[0]):
+    print("SDFS")
+if dic[lista2[1]]:
+    print("EUA")
+#print(lista)
+#print(dic)
+
+
+
+
+
 #    print(list(set(l2).intersection(l1)))
 #except :
 #    raise ExceptionSintatic(l1,l2)
