@@ -20,6 +20,7 @@ class Analisador_Semantico:
                 self.busca(self.list_tokens[i-1][1])
                 #caso seja num ou id  
                 if self.list_tokens[i+2][0] == ";":
+                    #atualiza (variavel, atribuicao )
                     self.atualiza(self.list_tokens[i-1], self.list_tokens[i+1][1],1)
 
                 #para atribuições que nao seja num ou id 
@@ -48,13 +49,13 @@ class Analisador_Semantico:
             sys.exit()
 
     #Método responsavel por verificar se já existe declarado  a variavel
-    def verifica_declaracao(self, token):
+    def verifica_declaracao(self, var):
        
-        if self.symbol_table.get(token[1]):
-            print("Erro Semântico: variavel ´{0}´ já declarada [l{1}:c{2}]".format(token[1], token[2], token[3] ))
+        if self.symbol_table.get(var[1]):
+            print("Erro Semântico: variavel ´{0}´ já declarada [l{1}:c{2}]".format(var[1], var[2], var[3] ))
             sys.exit()
         else:
-            self.inserir(token)
+            self.inserir(var)
 
     #Método responsavel por inserir dados na tabela
     def inserir(self, token):        
@@ -65,7 +66,8 @@ class Analisador_Semantico:
     #Método responsavel por atualizar valores de atribuição das variaveis
     def atualiza (self, val, atribuicao, n ):        
         
-        if n == 1:                       
+
+        if n == 1:                                 
             lista_temp =  self.symbol_table[val[1]]               
             lista_temp[2] = self.busca_atribuicao(atribuicao)             
             self.symbol_table[val[1]]= lista_temp
@@ -81,6 +83,12 @@ class Analisador_Semantico:
     def busca_atribuicao(self, valor):
         #Enquanto o valor nao receber um digito, ou seja ser um id  
         while (valor.isdigit() == False):
+                """
+                Exemplo:
+                    n1 =2;
+                    n2 =3;
+                    n1 = n2;
+                """ 
                 #verifico se o id existe na tabela         
                 self.busca(valor)
                 #crio uma lista temporaria para receber os valores da chave

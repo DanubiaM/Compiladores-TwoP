@@ -46,6 +46,7 @@ def all(args):
   analisador_sintatico = Analisador_Sintatico(lista_tokens)
   analisador_sintatico.verificacao_sintatica()
   analisador_sintatico.log_operacoes()
+  semantic_analyzer(args)
 
 if __name__ == '__main__':
 

@@ -4,14 +4,17 @@ start:
 	int n3;
 	int n4;
 	
+	
     n1 = 6;
     n2 = 8;
     n3 = 4;
     n4 = 7;
-
+	
+	int divisor;
+	divisor = 0;
 	int media;
-    media = (n1+n2+n3+n4)/4;
-	screen(media);
+    media = (n1+n2+n3+n4)/divisor;
+	
     if media > 7:
         screen("Aprovado");
     else:
