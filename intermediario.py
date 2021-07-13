@@ -65,19 +65,12 @@ class Intermediario:
 
             i+=1
         self.write_intermediario(self.cod_intermediario)
+       
         self.log_intermediario.close()     
 
     def write_intermediario(self, cod):
-        intermediario = open("cod_intermediario.txt","w")
-        for line in cod:
-            intermediario.write(line+"\n")
-        intermediario.close()
-
-    def read_intermediario(self):
-        intermediario = open("cod_intermediario.txt","r")
-        for line in intermediario:
-            print(line)
-        intermediario.close()
+        intermediary = [str(a) for a in cod]
+        print("\n".join(intermediary))
 
     def log_intermediary(self):
         log_int = open("log_intermediario.txt","r")
