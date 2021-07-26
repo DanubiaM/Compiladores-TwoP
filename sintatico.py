@@ -20,31 +20,34 @@ class Analisador_Sintatico:
         self.arquivo = open("log_op.txt",'w')
         
         self.producoes = {
-            0 :["tk_start_program",":", "LISTA_COMANDOS", ":", "tk_end_program"],
-            1 :["COMANDO",";", "LISTA_COMANDOS"],
-            2 : [],
-            3 : ["tk_read", "(", "id", ")"],
-            4 : ["tk_screen", "(", "PUTS", ")"],
-            5 : ["DECLARACAO_VAR"],
-            6: ["id", "tk_atribuicao", "EXPRESSAO"],
-            7 : ["CONDICIONAL", ":", "tk_end_if"],
-            8 : ["REPETICAO", ":", "tk_end_while"],
-            9 : ["tk_int", "id"],
-            10 : ["tk_if","EXPRESSAO", ":", "LISTA_COMANDOS", "ELSE_CONDICAO"],
+            0 :  ["tk_start_program",":", "LISTA_COMANDOS", ":", "tk_end_program"],
+            1 :  ["COMANDO",";", "LISTA_COMANDOS"],
+            2 :  [],
+            3 :  ["tk_read", "(", "id", ")"],
+            4 :  ["tk_screen", "(", "PUTS", ")"],
+            5 :  ["DECLARACAO_VAR"],
+            6:   ["id", "tk_atribuicao", "EXPRESSAO_ARITMETICA"],
+            7 :  ["CONDICIONAL", ":", "tk_end_if"],
+            8 :  ["REPETICAO", ":", "tk_end_while"],
+            9 :  ["tk_int", "id"],
+            10 : ["tk_if","EXPRESSAO_BOOLEANA", ":", "LISTA_COMANDOS", "ELSE_CONDICAO"],
             11 : ["tk_else", ":", "LISTA_COMANDOS"],
             12 : [],
-            13 : ["tk_while", "EXPRESSAO",":", "LISTA_COMANDOS"],
+            13 : ["tk_while", "EXPRESSAO_BOOLEANA",":", "LISTA_COMANDOS"],
             14 : ["OPERANDO", "TAIL"],
-            15 :["(", "EXPRESSAO", ")", "TAIL"],
-            16 :["OPERACAO"],
-            17 :[],
-            18 : ["c_logico", "EXPRESSAO"],
-            19 : ["op_logico", "EXPRESSAO"],
-            20 :["op_mat", "EXPRESSAO"],
-            21 : ["id"],
-            22 : ["num"],
-            23 : ["string"],
-            24: ["id"]
+            15 : ["(", "EXPRESSAO_ARITMETICA", ")", "TAIL"],
+            16 : ["OPERACAO"],
+            17 : [],
+            18 : ["op_mat", "EXPRESSAO_ARITMETICA"],
+            19 : ["EXPRESSAO_ARITMETICA","CONECTOR_LOGICO"],            
+            20 : ["CONECTOR"],
+            21 : [],
+            22 : ["op_logico", "EXPRESSAO_BOOLEANA"],             
+            23 : ["c_logico", "EXPRESSAO_BOOLEANA"],
+            24 : ["id"],
+            25 : ["num"],
+            26 : ["string"],
+            27:  ["id"]
         }
 
         self.nao_terminais = {
@@ -55,18 +58,21 @@ class Analisador_Sintatico:
         'CONDICIONAL': [10],
         'ELSE_CONDICAO': [11, 12],
         'REPETICAO': [13],
-        'EXPRESSAO': [14, 15],
-        'OPERANDO': [21,22],
+        'EXPRESSAO_ARITMETICA': [14, 15],
+        'OPERANDO': [24,25],
         'TAIL': [16,17],
-        'OPERACAO': [18, 19, 20],
-        'PUTS': [23, 24]  
+        'OPERACAO': [18],
+        'PUTS': [26, 27],
+        'EXPRESSAO_BOOLEANA': [19],
+        'CONECTOR': [22, 23],
+        'CONECTOR_LOGICO': [20, 21]  
         }
 
         self.terminais = {
-            'num': [14,22],
-            'op_mat': [16,20],
-            'c_logico': [16, 18],
-            'op_logico': [16, 19],
+            'num': [14,25,19],
+            'op_mat': [16,18],
+            'c_logico': [17,20,23],
+            'op_logico': [17,20, 22],
             'tk_read': [1,3],
             'tk_screen' :[1,4],
             'tk_if': [1, 7, 10],
@@ -78,12 +84,12 @@ class Analisador_Sintatico:
             'tk_end_if': [],
             'tk_end_while': [],
             'tk_atribuicao': [],
-            'string': [23],
-            'id': [1, 6, 14, 21, 24],
+            'string': [26],
+            'id': [1, 6, 14, 19, 24, 27],
             ';': [17],
             ')': [17],
-            '(': [15],
-            ':':[2, 12, 17]
+            '(': [15,19],
+            ':':[2, 12,17, 21]
         }
 
 
@@ -156,7 +162,7 @@ class Analisador_Sintatico:
             self.desempilhamento += 1
 
             #producoes vazias 2, 12 e 17
-            if any([valor_producao != 2, valor_producao != 12, valor_producao != 17]):                     
+            if any([valor_producao != 2, valor_producao != 12, valor_producao != 17, valor_producao != 21]):                     
                 
                 for i in reversed(valor_producao):                    
                     self.pilha_sintatica.append(i)
