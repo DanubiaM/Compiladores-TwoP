@@ -12,40 +12,37 @@ class Analisador_Semantico:
         
         for list_t in self.list_tokens:
             atribuicao = ""           
-                                 
+                    
             if(list_t[0] == 'tk_int'):                    
                 self.verifica_declaracao(self.list_tokens[i+1])
-                
-            elif list_t[0] == 'tk_atribuicao':   
-                self.busca(self.list_tokens[i-1][1])
-                #caso seja num ou id  
-                if self.list_tokens[i+2][0] == ";":
-                    #atualiza (variavel, atribuicao )
-                    self.atualiza(self.list_tokens[i-1], self.list_tokens[i+1][1],1)
 
-                #para atribuições que nao seja num ou id 
-                else:
-                    c = i +1
-                    while self.list_tokens[c][1] != ';':
-                        atribuicao += ""+ self.list_tokens[c][1] 
-                        c+=1    
-                    
-                    
-                    self.atualiza(self.list_tokens[i-1], atribuicao,2)                                     
+            elif list_t[0] == 'tk_atribuicao':   
+                self.busca(self.list_tokens[i-1])                
+                c = i +1
+                while self.list_tokens[c][1] != ';':
+                    atribuicao += ""+ self.list_tokens[c][1] 
+                    c+=1    
+  
+                self.atualiza(self.list_tokens[i-1], atribuicao)                                     
                                     
-            if list_t[1] == "/":  
-                self.divisao_zero(self.list_tokens[i+1])                               
+            elif list_t[1] == "/":  
+                self.divisao_zero(self.list_tokens[i+1])
+            elif list_t[0] == 'id':
+                self.busca(list_t)                                   
             i+=1 
         print("Semantic analysis performs successfully.")
         self.arquivo.close()
+        return self.symbol_table
+        
         
         
     #Método responsavel por verificar se a variavel existe.
-    def busca(self, valor):      
-        if self.symbol_table.get(valor):
+    def busca(self, valor):
+          
+        if self.symbol_table.get(valor[1]):
             return 1                                  
         else:
-            print("Erro Semântico: variavel ´{0}´ nao declarada".format(valor))
+            print("Erro Semântico: variavel ´{0}´ nao declarada [l{1}:c{2}]".format(valor[1], valor[2], valor[3]))
             sys.exit()
 
     #Método responsavel por verificar se já existe declarado  a variavel
@@ -64,49 +61,47 @@ class Analisador_Semantico:
         self.reg_operacao(1, token[1], token[2])
     
     #Método responsavel por atualizar valores de atribuição das variaveis
-    def atualiza (self, val, atribuicao, n ):        
-        
-
-        if n == 1:                                 
-            lista_temp =  self.symbol_table[val[1]]               
-            lista_temp[2] = self.busca_atribuicao(atribuicao)             
-            self.symbol_table[val[1]]= lista_temp
-             
-        else:
-            lista_temp =  self.symbol_table[val[1]]  
-            lista_temp[2] = atribuicao
-            self.symbol_table[val[1]]= lista_temp
+    def atualiza (self, val, atribuicao ):        
+                                      
+        lista_temp =  self.symbol_table[val[1]]               
+        lista_temp[2] = self.busca_atribuicao(atribuicao)             
+        self.symbol_table[val[1]]= lista_temp            
+      
                                 
         self.reg_operacao(2,val[1], atribuicao)
 
     #Método responsavel por buscar as atribuições das variaveis
     def busca_atribuicao(self, valor):
+        
         #Enquanto o valor nao receber um digito, ou seja ser um id  
-        while (valor.isdigit() == False):
-                """
-                Exemplo:
-                    n1 =2;
-                    n2 =3;
-                    n1 = n2;
-                """ 
-                #verifico se o id existe na tabela         
-                self.busca(valor)
-                #crio uma lista temporaria para receber os valores da chave
-                lista_temp = self.symbol_table[valor]
-                valor = str(lista_temp[2])               
+        while (valor.isdigit() == False ):
+            #Se não estiver contido na tabela de simbolos apenas retorna o valor
+            if( self.symbol_table.keys() != valor):
+                return valor
+            #crio uma lista temporaria para receber os valores da chave
+            lista_temp = self.symbol_table[valor]
+            valor = str(lista_temp[2])               
                 
-                #Se a atribuicao for um numero
-                if valor.isdigit():                    
-                    #retorno ele
-                    return valor
+            #Se a atribuicao for um numero
+            if valor.isdigit():                    
+                return valor
         
         return valor
 
     #Método responsavel por verificar se é uma divisão por zero
-    def divisao_zero(self, valor):         
-        if self.busca_atribuicao(valor[1]) == '0':
-            print("Erro Semântico: divisão por zero não permitida [l{0}:c{1}]".format(valor[2], valor[3]))            
-            sys.exit()
+    def divisao_zero(self, valor):
+        #caso digito
+        if valor[1].isdigit():
+            if self.busca_atribuicao(valor[1]) == '0':
+                print("Erro Semântico: divisão por zero não permitida [l{0}:c{1}]".format(valor[2], valor[3]))            
+                sys.exit()
+        else:
+            #caso variavel
+            self.busca(valor)
+            if self.busca_atribuicao(valor[1]) == '0' or self.symbol_table[valor[1]][2] == '0':
+                print("Erro Semântico: divisão por zero não permitida [l{0}:c{1}]".format(valor[2], valor[3]))            
+                sys.exit()
+            
     #Método que escreve o log em um arquivo de texto   
     def reg_operacao(self, val, variavel, valor = None):        
         if (val ==1):
@@ -118,6 +113,9 @@ class Analisador_Semantico:
     #Método que imprimri o resultado
     def log_operacoes(self):
         arquivo = open("log_ops.txt","r")
+        print("-=-"*20)
+        print("\t\tLOG DE OPERACOES SEMANTICA")
+        print("-=-"*20)
         for linha in arquivo:
             linha = linha.rstrip()
             print (linha)
