@@ -1,0 +1,11 @@
+Declarado variavel idade
+Comando de escrita da variavel ou string "Digite sua idade"
+ Comando de leitura da variavel idade 
+Comando condicional `if` reconhecido
+ Comando de escrita da variavel ou string "Voce e adulto"
+ Comando condicional `else` reconhecido
+ Comando condicional `if` reconhecido
+ Comando de escrita da variavel ou string "Voce e adolecente ou crianca"
+ Comando condicional `else` reconhecido
+ Comando de escrita da variavel ou string "Você e idoso"
+ 

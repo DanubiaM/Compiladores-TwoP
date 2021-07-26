@@ -9,7 +9,7 @@ start:
 		screen("somando");
 		int v2;
 		read(v2);
-		if(v1 < v2 & v1 > 1):
+		if v1 < v2 & v1 > 1:
 			screen(v1);
 		else:
 			if v>10 & v1 <5:
@@ -47,9 +47,36 @@ start:
 	int media;
     media = (n1+n2+n3+n4)/4;
 
-    if media > 7:
+    if media > 7 :
         screen("Aprovado");
     else:
         screen("Reprovado") ;
     :endif;
+:end
+
+TESTE 4:
+
+start:
+    int n;
+    int fatorial;
+    int cont;
+    int parada;
+
+    
+    screen("Digite um numero");	    
+    read(n);
+
+    fatorial = 1;
+    parada = n + 1;
+    cont = 1;
+    
+    
+    while cont < parada:
+        fatorial = fatorial * cont;
+        cont =  cont + 1;        
+    :endwhile;
+
+    screen(fatorial);  
+
+    
 :end

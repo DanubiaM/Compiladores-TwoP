@@ -93,6 +93,7 @@ class Intermediario:
 
 
             i+=1
+        
         self.log_intermediario.close()  
         self.getIntermediario() 
         #return self.write_intermediario(self.cod_intermediario)

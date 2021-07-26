@@ -1,0 +1,13 @@
+Declaração de variaveis realizada
+Empilhamento de endereco de retorno
+Comando screen executado
+Comando read executado
+Comando if executado
+Comando screen executado
+Comando else executado
+Comando if executado
+Comando screen executado
+Comando else executado
+Comando screen executado
+Fim do comando if 
+Fim do comando if 

@@ -1,0 +1,12 @@
+_Var idade
+escreva "Digite sua idade"
+leia idade
+se   idade > 18 & idade < 60 entao
+escreva "Voce e adulto"
+senao
+se   idade < 18 entao
+escreva "Voce e adolecente ou crianca"
+senao
+escreva "Você e idoso"
+fim_se
+fim_se

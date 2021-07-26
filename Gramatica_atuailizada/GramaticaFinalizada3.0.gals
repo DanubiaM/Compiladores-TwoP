@@ -1,0 +1,99 @@
+#Options
+GenerateScanner = true
+GenerateParser = true
+Language = Java
+ScannerName = Lexico
+ParserName = Sintatico
+SemanticName = Semantico
+ScannerCaseSensitive = true
+ScannerTable = Full
+Input = Stream
+Parser = LL
+#RegularDefinitions
+l: [A-Za-z]
+n: [0-9]
+c_esp:[\ \t\n\r]
+operadores_matematicos: [\+ \* \- / ]
+operador_logico: [> <]
+conector_logico: [\| &]
+
+#Tokens
+ :{c_esp}*
+num: {n}+
+
+//operadores e conectores lógicos
+op_mat: {operadores_matematicos}
+c_logico: {conector_logico}
+op_logico:{operador_logico}
+
+//comandos
+tk_read : "read"
+tk_screen : "screen"
+tk_if : "if"
+tk_int : "int"
+tk_else : "else"
+tk_while : "while"
+tk_start_program: "start"
+tk_end_program: "end"
+tk_end_if: "endif"
+tk_end_while: "endwhile"
+tk_atribuicao: "="
+//string e id
+string: \" ({l} | {n} | , | ! | \ )* \"
+id: {l}({l} | {n} | _ )*
+
+//reservadas
+";"
+")"
+"("
+":"
+
+
+#NonTerminals
+<PROGRAMA>
+<LISTA_COMANDOS>
+<COMANDO>
+<DECLARACAO_VAR>
+<CONDICIONAL>
+<ELSE_CONDICAO>
+<REPETICAO>
+<EXPRESSAO_ARITMETICA>
+<OPERANDO>
+<TAIL>
+<OPERACAO>
+<PUTS>
+<EXPRESSAO_BOOLEANA>
+<CONECTOR>
+<CONECTOR_LOGICO>
+#Grammar
+<PROGRAMA>::=tk_start_program ":" <LISTA_COMANDOS> ":" tk_end_program;
+//comandos
+<LISTA_COMANDOS>::= <COMANDO> ";" <LISTA_COMANDOS> | î;
+<COMANDO>::= tk_read "(" id ")";
+<COMANDO>::= tk_screen "(" <PUTS> ")";
+<COMANDO>::= <DECLARACAO_VAR>;
+<COMANDO>::= id tk_atribuicao <EXPRESSAO_ARITMETICA>;
+<COMANDO>::= <CONDICIONAL> ":" tk_end_if;
+<COMANDO>::= <REPETICAO> ":" tk_end_while;
+
+
+<DECLARACAO_VAR>::= tk_int id;
+<CONDICIONAL>::= tk_if<EXPRESSAO_BOOLEANA>  ":" <LISTA_COMANDOS><ELSE_CONDICAO> ;
+<ELSE_CONDICAO>::= tk_else ":"<LISTA_COMANDOS> | î;
+<REPETICAO>::= tk_while <EXPRESSAO_BOOLEANA> ":" <LISTA_COMANDOS>;
+
+
+//Expressao Aritmética
+<EXPRESSAO_ARITMETICA>::= <OPERANDO><TAIL> | "("<EXPRESSAO_ARITMETICA>")"<TAIL>;
+<TAIL>::= <OPERACAO> | î;
+<OPERACAO>::= op_mat<EXPRESSAO_ARITMETICA> ;
+
+//Expressão Booleana
+<EXPRESSAO_BOOLEANA>::=<EXPRESSAO_ARITMETICA><CONECTOR_LOGICO>;
+<CONECTOR_LOGICO>::=  <CONECTOR> | î;
+<CONECTOR>::= op_logico<EXPRESSAO_BOOLEANA> | c_logico <EXPRESSAO_BOOLEANA> ;
+
+
+//tipos
+<OPERANDO>::= id | num;
+<PUTS>::= string | id;

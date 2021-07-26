@@ -1,23 +1,19 @@
 start:
-	int n1;
-	int n2;
-	int n3;
-	int n4;
-	
-	
-    n1 = 6;
-    n2 = 8;
-    n3 = 4;
-    n4 = 7;
-	
-	int divisor;
-	divisor = 0;
-	int media;
-    media = (n1+n2+n3+n4)/divisor;
-	
-    if media > 7:
-        screen("Aprovado");
+    int idade;
+
+    
+    screen("Digite sua idade");	    
+    read(idade);
+
+    if idade > 18 & idade <60:
+        screen("Voce e adulto");
     else:
-        screen("Reprovado") ;
-    :endif;
+        if idade<18:
+            screen("Voce e adolecente ou crianca");
+        else:
+            screen("Você e idoso");
+        :endif;
+    :endif;      
+
+    
 :end
