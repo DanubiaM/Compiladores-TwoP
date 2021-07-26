@@ -3,8 +3,7 @@ import os
 class Codigo_Final:
 
     def __init__(self, cod_intermediario):
-        self.codigo_final = [] 
-        self.codigo_final = []
+        self.codigo_final = []         
         self.variaveis = []
         self.addr_var = []
         self.cont_string = 0
@@ -14,6 +13,7 @@ class Codigo_Final:
         self.label_else = 0
         self.stack_label = []
         self.codigo_intermediario = []
+        self.log_final = open("log_final.txt","w")
         self._arquivo = open(cod_intermediario, "r")
 
         for line in self._arquivo:
@@ -24,27 +24,31 @@ class Codigo_Final:
         """Variaveis"""
         self.obter_tabela_variaveis()           #Obtem as variaveis 
         self.getAddr_var()                      #Cria endereços para as variaveis
+        self.log_final.write("Declaração de variaveis realizada\n")
+
         self.codigo_final.append(".global main")
         self.codigo_final.append("{0}       @empilhamento endereco de retorno".format("main:\npush {ip, lr}"))
-        
-        #self.codigo_final.append("main:\n push{ip, lr} '{0}".format("@empilhamaento endereço de retorno"))
-        
-        
+        self.log_final.write("Empilhamento de endereco de retorno\n")
+
         for line in  self.codigo_intermediario:
             
             if line.split()[0] == 'leia':
+                    self.log_final.write("Comando read executado\n")
                     self.codigo_final.append("{0}       @load addres of pattern number".format("LDR R0, =format"))
                     self.codigo_final.append("{0}       @load addres of variable".format("LDR R1, ="+line.split()[1]))
                     self.codigo_final.append("BL scanf  @call function for read")                    
             elif line.split()[0] == 'escreva':
+                self.log_final.write("Comando screen executado\n")
                 self.codigo_final.append("{0}           @load addres of pattern number".format("LDR R0, ="+self.getAddr_var(line.split()[1:len(line.split())])))
                 self.codigo_final.append("BL printf      @call function for write")
                     
-            elif line.split()[0] == 'se':               
+            elif line.split()[0] == 'se':
+                self.log_final.write("Comando if executado\n")
+               
                 self.label_if = self.getLabel()
                 self.label_else = self.getLabel() 
                 self.label_endif = self.getLabel()         
-                self.stack_label.append(self.label_endif) #Label for endif
+                #self.stack_label.append(self.label_endif) #Label for endif
                 exp = []
                 con = None
                 i=0                
@@ -60,20 +64,28 @@ class Codigo_Final:
                         exp.clear()                              
                
                 self.calc_expLogic(exp, con)
-                self.getExpBool(exp)                   
+                self.getExpBool(exp)   
+
                 self.stack_label.append(self.label_else)
                 self.codigo_final.append("{0}:      @label content if".format(self.label_if))
 
             elif line.split()[0] == 'fim_se':
+                self.log_final.write("Fim do comando if \n")
+
                 self.codigo_final.append("{0}:      @label for endif".format(self.stack_label.pop()))
   
             elif  line.split()[0] == 'senao':
-                self.codigo_final.append("B {0}      @jump for endif".format(self.label_endif))                
+                self.log_final.write("Comando else executado\n")
+
+                self.codigo_final.append("B {0}      @jump for endif".format(self.label_endif))
                 self.codigo_final.append("{0}:      @label for else".format(self.stack_label.pop()))
+                self.stack_label.append(self.label_endif)                
+
             
             elif line.split()[0] == "enquanto":
-                self.label_if = self.getLabel()
-                #self.label_endif = self.getLabel() 
+                self.log_final.write("Comando while executado\n")
+
+                self.label_if = self.getLabel()                
                 self.label_else = self.getLabel()         
                 self.stack_label.append(self.label_else) #Label for endif
                 label_while = self.getLabel()
@@ -100,48 +112,59 @@ class Codigo_Final:
                 self.codigo_final.append("{0}:      @label content while".format(self.label_if))
 
             elif line.split()[0] == "fim_enquanto":
+                self.log_final.write("Fim do comando while\n")
+
                 self.codigo_final.append("B {0}      @jump loop while".format(self.stack_label.pop()))
                 self.codigo_final.append("{0}:      @label for endwhile".format(self.stack_label.pop()))
 
             elif  line.split()[1] == '=':
-                
+                self.log_final.write("Atribuicoes de variaveis executado\n")
                 self.calcula_expressao(line.split(" ",2)[2].strip())
                 self.codigo_final.append("pop {R1}          @pops in R1")
                 self.codigo_final.append("LDR R0, ={0}      @load address".format(line.split()[0]))
                 self.codigo_final.append("STR R1, [R0]      @store  result")
+        
         self.codigo_final.append("pop {ip, pc}")
         self.addr_var.append(".global printf")
         self.addr_var.append(".global scanf")
 
-        #print(self.codigo_final)   
-        intermediary = [str(a) for a in self.codigo_final]
-        print( "\n".join(intermediary))
-        addr = [str(a) for a in self.addr_var]
-        print( "\n".join(addr))
-        #print(self.addr_var)
-      
+        self.log_final.close()
+        self.getFinal()          
+        print("Final code generation performed successfully.")
+        
+        
+    def getFinal(self):
+        arquivo_final = open ("arquivo_saida.s","w")
+        for line in self.codigo_final:            
+            arquivo_final.write(line+"\n")
+        for line in self.addr_var:            
+            arquivo_final.write(line+"\n")    
+        arquivo_final.close() 
+
+    def log_finalCode(self):
+        log_f = open("log_final.txt","r")
+        for log in log_f:
+            print(log)
+        log_f.close()
+
     def calc_expLogic(self, exp, op = None):
         i=0
         expressao= ""
-        c_log = ""
-        print(exp)
-        #print(op)
+        c_log = ""       
+        
         while i != len(exp):         
             
-            if exp[i] == '>':
-                print(exp[i])
-                #print(expressao)
+            if exp[i] == '>':                
                 self.calcula_expressao(expressao)
-                self.codigo_final.append("pop {R0}")        
-                self.codigo_final.append("MOV R1, R0")
-                #self.getExpBool(exp[i], op)
+                self.codigo_final.append("pop {R0}          @pops R0")        
+                self.codigo_final.append("MOV R1, R0        @mov content for R1")                
                 c_log = exp[i]
                 expressao = ""
+
             elif exp[i] == "<":                
                 self.calcula_expressao(expressao)
-                self.codigo_final.append("pop {R0}")        
-                self.codigo_final.append("MOV R1, R0")
-                #self.getExpBool(exp[i], op)
+                self.codigo_final.append("pop {R0}          @pops R0")        
+                self.codigo_final.append("MOV R1, R0        @mov content for R1")                
                 c_log = exp[i]
                 expressao = ""
 
@@ -149,17 +172,13 @@ class Codigo_Final:
             i+=1
 
         self.calcula_expressao(expressao)
-        self.codigo_final.append("pop {R0}")   
-        self.codigo_final.append("MOV R2, R0")
-        self.codigo_final.append("CMP R1, R2")               
+        self.codigo_final.append("pop {R0}      @pops R0")   
+        self.codigo_final.append("MOV R2, R0        @mov content for r2")
+        self.codigo_final.append("CMP R1, R2        @compar contents")               
         self.getExpBool(c_log , op)
 
 
-    def getExpBool(self, conector,op = None ):
-        #print("*"*10)
-        #print(conector)
-        #print(op)
-        #print("*"*10)
+    def getExpBool(self, conector,op = None ):        
         if op == "&" or op == None:
             self.codigo_final.append("@AND OPERATION")
             if conector == ">":
@@ -213,19 +232,16 @@ class Codigo_Final:
         self.cont_label +=1
         return "L{0}".format(self.cont_label)
 
-    def calcula_expressao(self, expressao):
-        
+    def calcula_expressao(self, expressao):        
         
         _expressao =[]
-        _expressao.append(expressao)
-        
-        #_expressao.split(" ").trim
-        
+        _expressao.append(expressao)      
+ 
         if len(expressao) > 1:
             for atr in _expressao[0].split(" "): 
                    
                 if atr.strip().islower():
-                    #print(atr)
+                    
                     self.codigo_final.append("LDR R0, ={0}      @load addres for variable".format(atr.strip()))
                     self.codigo_final.append("LDR R0, [R0]      @load data of variable")
                     self.codigo_final.append("push {R0}         @stack variable content")
@@ -258,8 +274,7 @@ class Codigo_Final:
                     self.codigo_final.append("push {R0}         @stack result content")
         else:
             if expressao.isdigit():           
-                self.codigo_final.append("MOV R0, #{0}      @load addres for variable".format(expressao))
-                #Ultima alteração
+                self.codigo_final.append("MOV R0, #{0}      @load addres for variable".format(expressao))              
                 self.codigo_final.append("push {R0}         @stack result content")
 
             else:
