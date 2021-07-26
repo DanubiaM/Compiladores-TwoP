@@ -31,65 +31,39 @@ class Codigo_Final:
         
         
         for line in  self.codigo_intermediario:
-            #print(line.split()) 
+            
             if line.split()[0] == 'leia':
                     self.codigo_final.append("{0}       @load addres of pattern number".format("LDR R0, =format"))
                     self.codigo_final.append("{0}       @load addres of variable".format("LDR R1, ="+line.split()[1]))
                     self.codigo_final.append("BL scanf  @call function for read")                    
             elif line.split()[0] == 'escreva':
-                
-                print(line.split()[1])
-                self.codigo_final.append("{0}           @load addres of pattern number".format("LDR R0, ="+self.getAddr_var(line.split()[1])))
+                self.codigo_final.append("{0}           @load addres of pattern number".format("LDR R0, ="+self.getAddr_var(line.split()[1:len(line.split())])))
                 self.codigo_final.append("BL printf      @call function for write")
                     
-            elif line.split()[0] == 'se':
-                print(line.split())
+            elif line.split()[0] == 'se':               
                 self.label_if = self.getLabel()
                 self.label_else = self.getLabel() 
                 self.label_endif = self.getLabel()         
                 self.stack_label.append(self.label_endif) #Label for endif
-
-                self.calcula_expressao(line.split()[1])  
-                self.codigo_final.append("pop {R0}")   
-                self.codigo_final.append("MOV R1, R0")    
-                self.calcula_expressao(line.split()[3])
-                self.codigo_final.append("pop {R0}")   
-                self.codigo_final.append("MOV R2, R0")
-                self.codigo_final.append("CMP R1, R2")
-                i=0
-                
-                if len(line.split()) >5:
-                    for item in line.split():
-                                                          
-                        if item == "&" or item ==  "|":
-                            
-                            self.getExpBool(line.split()[i-2],item)                                              
-                            self.calcula_expressao(line.split()[i+1]) 
-                            self.codigo_final.append("pop {R0}")     
-                            self.codigo_final.append("MOV R1, R0")    
-                            self.calcula_expressao(line.split()[i+3])
-                            self.codigo_final.append("pop {R0}")   
-                            self.codigo_final.append("MOV R2, R0")
-                            self.codigo_final.append("CMP R1, R2")
-                            self.getExpBool(line.split()[i+2],item)
- 
-                        i+=1
-                    print(line.split()[i-5])
-                    if line.split()[i-5] == "|": self.codigo_final.append("B {0}      @label content else".format(self.label_else))
-    
-                else:                    
-                    self.getExpBool(line.split()[2])    
-                    
+                exp = []
+                con = None
+                i=0                
+                for atr in line.split()[1:len(line.split())-1]:
+                    exp.append(atr)
+                    if atr == "&":
+                       self.calc_expLogic(exp, atr)
+                       con = atr
+                       exp.clear()
+                    if atr == "|":
+                        self.calc_expLogic(exp, atr)
+                        con = atr
+                        exp.clear()                              
+               
+                self.calc_expLogic(exp, con)
+                self.getExpBool(exp)                   
                 self.stack_label.append(self.label_else)
                 self.codigo_final.append("{0}:      @label content if".format(self.label_if))
-                
-                """if(line.split()[2] == ">"):                    
-                    self.codigo_final.append("BLE {0}".format(label))
-                    self.codigo_final.append("B {0}".format(label_else))
-                elif line.split()[2] == "<":
-                    self.codigo_final.append("BLT {0}".format(label))
-                    self.codigo_final.append("B {0}".format(label_else))
-                self.codigo_final.append("{0}:      @label content if".format(label))"""    
+
             elif line.split()[0] == 'fim_se':
                 self.codigo_final.append("{0}:      @label for endif".format(self.stack_label.pop()))
   
@@ -97,7 +71,38 @@ class Codigo_Final:
                 self.codigo_final.append("B {0}      @jump for endif".format(self.label_endif))                
                 self.codigo_final.append("{0}:      @label for else".format(self.stack_label.pop()))
             
-                  
+            elif line.split()[0] == "enquanto":
+                self.label_if = self.getLabel()
+                #self.label_endif = self.getLabel() 
+                self.label_else = self.getLabel()         
+                self.stack_label.append(self.label_else) #Label for endif
+                label_while = self.getLabel()
+                self.stack_label.append(label_while)
+
+                self.codigo_final.append("{0}:      @label for while".format(label_while))
+                exp = []
+                con = None
+                i=0                
+                for atr in line.split()[1:len(line.split())]:
+                    exp.append(atr)
+                    if atr == "&":
+                       self.calc_expLogic(exp, atr)
+                       con = atr
+                       exp.clear()
+                    if atr == "|":
+                        self.calc_expLogic(exp, atr)
+                        con = atr
+                        exp.clear()                              
+               
+                self.calc_expLogic(exp, con)
+                self.getExpBool(exp)
+
+                self.codigo_final.append("{0}:      @label content while".format(self.label_if))
+
+            elif line.split()[0] == "fim_enquanto":
+                self.codigo_final.append("B {0}      @jump loop while".format(self.stack_label.pop()))
+                self.codigo_final.append("{0}:      @label for endwhile".format(self.stack_label.pop()))
+
             elif  line.split()[1] == '=':
                 
                 self.calcula_expressao(line.split(" ",2)[2].strip())
@@ -115,21 +120,58 @@ class Codigo_Final:
         print( "\n".join(addr))
         #print(self.addr_var)
       
+    def calc_expLogic(self, exp, op = None):
+        i=0
+        expressao= ""
+        c_log = ""
+        print(exp)
+        #print(op)
+        while i != len(exp):         
+            
+            if exp[i] == '>':
+                print(exp[i])
+                #print(expressao)
+                self.calcula_expressao(expressao)
+                self.codigo_final.append("pop {R0}")        
+                self.codigo_final.append("MOV R1, R0")
+                #self.getExpBool(exp[i], op)
+                c_log = exp[i]
+                expressao = ""
+            elif exp[i] == "<":                
+                self.calcula_expressao(expressao)
+                self.codigo_final.append("pop {R0}")        
+                self.codigo_final.append("MOV R1, R0")
+                #self.getExpBool(exp[i], op)
+                c_log = exp[i]
+                expressao = ""
+
+            expressao +=" "+exp[i]                      
+            i+=1
+
+        self.calcula_expressao(expressao)
+        self.codigo_final.append("pop {R0}")   
+        self.codigo_final.append("MOV R2, R0")
+        self.codigo_final.append("CMP R1, R2")               
+        self.getExpBool(c_log , op)
+
 
     def getExpBool(self, conector,op = None ):
+        #print("*"*10)
+        #print(conector)
+        #print(op)
+        #print("*"*10)
         if op == "&" or op == None:
             self.codigo_final.append("@AND OPERATION")
             if conector == ">":
-                 self.codigo_final.append("BLT {0}      @case Val1<Val2".format(self.label_else))
-            elif conector == "<":
-                print("here")
-                self.codigo_final.append("BGT {0}       @case Va1>Val2".format(self.label_else))
+                 self.codigo_final.append("BLE {0}      @case Val1<Val2".format(self.label_else))
+            elif conector == "<":                
+                self.codigo_final.append("BGE {0}       @case Va1>Val2".format(self.label_else))
         elif op == "|":
             self.codigo_final.append("@OR OPERATION")
             if conector == "<":
-                self.codigo_final.append("BLT {0}      @case Val1<Val2".format(self.label_if))
+                self.codigo_final.append("BLE {0}      @case Val1<Val2".format(self.label_if))
             elif  conector == ">":
-                self.codigo_final.append("BGT {0}       @case Va1>Val2".format(self.label_if))
+                self.codigo_final.append("BGE {0}       @case Va1>Val2".format(self.label_if))
 
 
              
@@ -151,27 +193,32 @@ class Codigo_Final:
             for var in self.variaveis:                
                 self.addr_var.append(".balign 8")
                 self.addr_var.append("{0}: .word 0".format(var.strip()))
-        #Chamado para printar, caso tenha alguma string do tipo "text"
-        elif re.search("^\"", atr):
-            #print(atr)            
+        #Chamado para printar, caso tenha alguma string do tipo "text"        
+        elif re.search("^\"", atr[0]):                        
             self.cont_string += 1
             self.addr_var.append(".balign 8")
-            self.addr_var.append("string_{0}: .asciz {1}".format(self.cont_string,atr))
-            
-
+            string =""
+            for world in atr:
+                string += world +" "
+            self.addr_var.append("string_{0}: .asciz {1}".format(self.cont_string,string))
             return "string_"+str(self.cont_string)
+
         #caso seja uma atribuicao ja declarada
         else:
+            self.calcula_expressao(atr[0])
+            self.codigo_final.append("pop {R1}         @pops in R1")
             return "format"
-
+            
     def getLabel(self):
         self.cont_label +=1
         return "L{0}".format(self.cont_label)
 
     def calcula_expressao(self, expressao):
         
+        
         _expressao =[]
         _expressao.append(expressao)
+        
         #_expressao.split(" ").trim
         
         if len(expressao) > 1:
@@ -218,3 +265,5 @@ class Codigo_Final:
             else:
                 self.codigo_final.append("LDR R0, ={0}      @load addres for variable".format(expressao))
                 self.codigo_final.append("LDR R0, [R0]      @load data of variable")
+                self.codigo_final.append("push {R0}         @stack result content")
+
