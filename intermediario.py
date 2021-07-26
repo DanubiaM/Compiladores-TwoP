@@ -35,11 +35,25 @@ class Intermediario:
                 self.log_intermediario.write("Atribuido à {0} a expressão {1}\n ".format(self.lista_tokens[i-1][1], infix_to_postfix(atribuicao))) 
 
             elif token[0] == 'tk_while':
-                j=i+1
-                condicao = ""
-                while self.lista_tokens[j][0] != ':':
-                    condicao +=" "+ self.lista_tokens[j][1]
-                    j+=1
+                j=i+1                         
+                condicao = " "
+                exp = ""
+                while self.lista_tokens[j][0] != ':':                   
+                    
+                    if self.lista_tokens[j][0] == "op_logico":
+                        condicao += infix_to_postfix(exp) + " "+self.lista_tokens[j][1]
+                        exp = ""
+                        j+=1
+
+                    elif self.lista_tokens[j][0] == "c_logico":
+                        condicao += infix_to_postfix(exp) + " "+self.lista_tokens[j][1]
+                        exp = ""
+                        j+=1
+
+                    exp += " "+self.lista_tokens[j][1]                        
+                    j+=1 
+                            
+                condicao += infix_to_postfix(exp) 
                 self.cod_intermediario.append("enquanto {0}".format(condicao))
                 self.log_intermediario.write("Laço de repetição `while` reconhecido\n ") 
             
@@ -47,11 +61,26 @@ class Intermediario:
                 self.cod_intermediario.append("fim_enquanto")
 
             elif token[0] == 'tk_if':
-                j=i+1
-                condicao = ""
-                while self.lista_tokens[j][0] != ':':
-                    condicao += " "+self.lista_tokens[j][1]
-                    j+=1
+                j=i+1                         
+                condicao = " "
+                exp = ""
+                while self.lista_tokens[j][0] != ':':                   
+                    
+                    if self.lista_tokens[j][0] == "op_logico":
+                        condicao += infix_to_postfix(exp) + " "+self.lista_tokens[j][1]
+                        exp = ""
+                        j+=1
+
+                    elif self.lista_tokens[j][0] == "c_logico":
+                        condicao += infix_to_postfix(exp) + " "+self.lista_tokens[j][1]
+                        exp = ""
+                        j+=1
+
+                    exp += " "+self.lista_tokens[j][1]                        
+                    j+=1 
+                            
+                condicao += infix_to_postfix(exp)              
+         
                 self.cod_intermediario.append("se {0} entao".format(condicao))
                 self.log_intermediario.write("Comando condicional `if` reconhecido\n ") 
 
@@ -64,13 +93,19 @@ class Intermediario:
 
 
             i+=1
-        self.write_intermediario(self.cod_intermediario)
+        self.log_intermediario.close()  
+        self.getIntermediario() 
+        #return self.write_intermediario(self.cod_intermediario)
        
-        self.log_intermediario.close()     
+    def getIntermediario(self):
+        arquivo_intermediario = open ("arquivo_intermediario.txt","w")
+        for line in self.cod_intermediario:            
+            arquivo_intermediario.write(line+"\n")
+        arquivo_intermediario.close()    
 
     def write_intermediario(self, cod):
         intermediary = [str(a) for a in cod]
-        print("\n".join(intermediary))
+        return "\n".join(intermediary)
 
     def log_intermediary(self):
         log_int = open("log_intermediario.txt","r")
